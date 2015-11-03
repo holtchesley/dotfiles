@@ -77,7 +77,13 @@
   (global-set-key (kbd "C-x g") 'magit-status)
   )
 
+(require 'company)
+(setq company-idle-delay 0.2)
+(setq company-minmum-prefix-length 2)
+(global-company-mode)
 
+(use-package dash)
+(require 'dash)
 
 (use-package smex
   :init
@@ -95,9 +101,7 @@
     (yas-global-mode 1)))
 
 
-(use-package volatile-highlights
-  :init
-  (volatile-highlights-mode t))
+(use-package volatile-highlights)
 
 
 (use-package undo-tree
@@ -759,61 +763,51 @@
   ;; Specify the print length to be 100 to stop infinite sequences killing
   ;; things. This might be dangerous for some people relying on
   ;; *print-length* being larger. Consider a work around
-  (defun live-nrepl-set-print-length ()
-    (nrepl-send-string-sync "(set! *print-length* 100)" "clojure.core"))
+    ;; (defun live-nrepl-set-print-length ()      (nrepl-send-string-sync "(set! *print-length* 100)" "clojure.core"))
 
-  (add-hook 'nrepl-connected-hook 'live-nrepl-set-print-length)
+                                        ;
+    (add-hook 'nrepl-connected-hook 'live-nrepl-set-print-length)
 
-  (setq nrepl-port "4555")))
-
-(use-package ac-nrepl
-  :init
-  (progn
-    (add-hook 'cider-mode-hook 'ac-nrepl-setup)
-    (add-hook 'cider-repl-mode-hook 'ac-nrepl-setup)
-
-    (eval-after-load "auto-complete"
-      '(add-to-list 'ac-modes 'cider-mode))))
-
+    (setq nrepl-port "4555")))
 
 (use-package popup)
 
 (use-package fuzzy)
 
-(use-package auto-complete)
+;; (use-package auto-complete)
 
-(use-package auto-complete-config
-  :bind (("C-M-n" . ac-next)
-         ("C-M-p" . ac-previous)
-         ("\t" . ac-complete)
-         ("\r" . nil))
-  :config
-  (progn
-    (ac-config-default)
-    (setq ac-comphist-file "~/.emacs.d/tmp/")
-    (global-auto-complete-mode t)
-    (setq ac-auto-show-menu t)
-    (setq ac-dwim t)
-    (setq ac-use-menu-map t)
-    (setq ac-quick-help-delay 1)
-    (setq ac-quick-help-height 60)
-    (setq ac-disable-inline t)
-    (setq ac-show-menu-immediately-on-auto-complete t)
-    (setq ac-auto-start 2)
-    (setq ac-candidate-menu-min 0)
+;; (use-package auto-complete-config
+;;   :bind (("C-M-n" . ac-next)
+;;          ("C-M-p" . ac-previous)
+;;          ("\t" . ac-complete)
+;;          ("\r" . nil))
+;;   :config
+;;   (progn
+;;     (ac-config-default)
+;;     (setq ac-comphist-file "~/.emacs.d/tmp/")
+;;     (global-auto-complete-mode t)
+;;     (setq ac-auto-show-menu t)
+;;     (setq ac-dwim t)
+;;     (setq ac-use-menu-map t)
+;;     (setq ac-quick-help-delay 1)
+;;     (setq ac-quick-help-height 60)
+;;     (setq ac-disable-inline t)
+;;     (setq ac-show-menu-immediately-on-auto-complete t)
+;;     (setq ac-auto-start 2)
+;;     (setq ac-candidate-menu-min 0)
 
-    (set-default 'ac-sources
-                 '(ac-source-dictionary
-                   ac-source-words-in-buffer
-                   ac-source-words-in-same-mode-buffers
-                   ac-source-semantic
-                   ac-source-yasnippet))
+;;     (set-default 'ac-sources
+;;                  '(ac-source-dictionary
+;;                    ac-source-words-in-buffer
+;;                    ac-source-words-in-same-mode-buffers
+;;                    ac-source-semantic
+;;                    ac-source-yasnippet))
 
-    (dolist (mode '(magit-log-edit-mode log-edit-mode org-mode text-mode haml-mode
-                                        sass-mode yaml-mode csv-mode espresso-mode haskell-mode
-                                        html-mode nxml-mode sh-mode smarty-mode clojure-mode
-                                        lisp-mode textile-mode markdown-mode tuareg-mode))
-      (add-to-list 'ac-modes mode))))
+;;     (dolist (mode '(magit-log-edit-mode log-edit-mode org-mode text-mode haml-mode
+;;                                         sass-mode yaml-mode csv-mode espresso-mode haskell-mode
+;;                                         html-mode nxml-mode sh-mode smarty-mode clojure-mode
+;;                                         lisp-mode textile-mode markdown-mode tuareg-mode))
+;;       (add-to-list 'ac-modes mode))))
 
 
 
@@ -826,3 +820,27 @@
   :mode ("\\.py\\'" . python-mode)
   :bind (("RET" . newline-and-indent))
   :interpreter ("python" . python-mode))
+
+(use-package racer
+  :init (add-to-list 'auto-mode-alist '("\\.rs" . rust-mode))
+  :config
+  (progn (setq racer-cmd "/Users/bc/bin/racer")
+         (setq racer-rust-src-path "/Users/bc/Documents/rusten/rust/src")
+    ))
+
+;(use-package flycheck)
+
+;(use-package flycheck-rust)
+
+(use-package rust-mode
+  :bind (("M-." . racer-find-definition))
+  :config (add-hook 'rust-mode-hook
+                    '(lambda () (racer-activate)
+                       (racer-turn-on-eldoc)
+                       (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
+                       (set (make-local-variable 'company-backends) '(company-racer)))))
+
+
+
+
+(server-start)

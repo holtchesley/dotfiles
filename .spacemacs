@@ -73,7 +73,7 @@ values."
    ;; variable is `emacs' then the `holy-mode' is enabled at startup. `hybrid'
    ;; uses emacs key bindings for vim's insert mode, but otherwise leaves evil
    ;; unchanged. (default 'vim)
-   dotspacemacs-editing-style 'emacs
+   dotspacemacs-editing-style 'hybrid
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
@@ -214,6 +214,7 @@ layers configuration. You are free to put any user code."
     (setq org-refile-targets '(("~/journal/goals.org" :maxlevel . 2)))
     (setq org-use-property-inheritance t)
     (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+    (setq evil-move-beyond-eol t)
     )
 )
 

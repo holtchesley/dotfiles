@@ -18,6 +18,8 @@ values."
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
+     yaml
+     sql
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -42,10 +44,13 @@ values."
      latex
      c-c++
      elixir
-     personal
+     ; personal
      restclient
      ruby
      ruby-on-rails
+     bibtex
+     ipython-notebook
+     dart
      ;; version-control
      )
    ;; List of additional packages that will be installed without being
@@ -215,6 +220,13 @@ layers configuration. You are free to put any user code."
     (setq org-use-property-inheritance t)
     (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
     (setq evil-move-beyond-eol t)
+    (add-to-list 'auto-mode-alist '("\\.cljs\\.hl\\'" . clojurescript-mode))
+    (add-hook 'clojure-mode-hook 'yas-minor-mode)
+    (add-hook 'clojurescript-mode-hook 'yas-minor-mode)
+    (add-to-list 'auto-mode-alist '("\\.tufte\\'" . org-mode))
+    (setq org-ref-default-bibliography '("~/journal/references.bib")
+          org-ref-pdf-directory "~/Documents/papers/"
+          org-ref-bibliography-notes "~/Papers/notes.org")
     )
 )
 
@@ -225,6 +237,13 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector
+   ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
+ '(cider-boot-parameters "cider repl -s wait")
+ '(custom-safe-themes
+   (quote
+    ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
+ '(evil-want-Y-yank-to-eol t)
  '(org-agenda-files (quote ("~/journal/goals.org"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
